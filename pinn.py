@@ -14,7 +14,7 @@ class PINN:
         """
         Args:
             network: keras network model with input (t, x) and output u(t, x).
-            c: wave velocity. Default is 1.
+            c: Default is 1.
         """
 
         self.network = network
@@ -35,13 +35,8 @@ class PINN:
                           u(t, x=bounds) relative to boundary condition ]
         """
 
-        # equation input: (t, x)
         tx_eqn = tf.keras.layers.Input(shape=(2,))
-        # initial condition input: (t=0, x)
         tx_ini = tf.keras.layers.Input(shape=(2,))
-        # boundary condition input: (t, x=-1) or (t, x=+1)
-        ##tx_bnd_up = tf.keras.layers.Input(shape=(2,))
-        ##tx_bnd_down = tf.keras.layers.Input(shape=(2,))
         tx_bnd = tf.keras.layers.Input(shape=(2,))
         tx_bnd_up = tf.keras.layers.Input(shape=(2,))
         tx_bnd_down = tf.keras.layers.Input(shape=(2,))
@@ -56,15 +51,7 @@ class PINN:
         # boundary condition output
         u_bnd_down, _, _, _, _ = self.grads(tx_bnd_down)
         u_bnd_up, _, _, _, _ = self.grads(tx_bnd_up)
-        #u_bnd, _, _, _, _ = self.grads(tx_bnd)
 
-
-        ##u_bnd = self.network(tx_bnd_up) - self.network(tx_bnd_down)       #self.network(tx_bnd_up)         #PBC # dirichlet
-
-        #_, _,du_dx_up, _, _ = self.grads(tx_bnd_up)
-        #_, _,du_dx_down, _, _ = self.grads(tx_bnd_down)
-        #u_bnd_der =  du_dx_up  - du_dx_down                  #self.network(tx_bnd_down)
-        #_, _, u_bnd, _, _ = self.grads(tx_bnd)  # neumann
 
         # build the PINN model for the wave equation
         return tf.keras.models.Model(
