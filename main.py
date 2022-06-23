@@ -111,7 +111,7 @@ if __name__ == '__main__':
     
     fig= plt.figure(figsize=(15,10))
     vmin, vmax = -np.max(np.max(np.abs(E))), np.max(np.max(np.abs(E)))
-    plt.pcolormesh(t, x, E, cmap='rainbow', norm=Normalize(vmin=vmin, vmax=vmax))
+    plt.pcolormesh(t, x, abs(E), cmap='rainbow', norm = colors.LogNorm())
     font1 = {'family':'serif','size':20}
     font2 = {'family':'serif','size':15}
     plt.title("Error", fontdict = font1)
