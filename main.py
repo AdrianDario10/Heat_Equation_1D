@@ -1,14 +1,16 @@
-import lib.tf_silent
+import tf_silent
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
 from matplotlib.gridspec import GridSpec
-from lib.pinn import PINN
-from lib.network import Network
-from lib.optimizer import L_BFGS_B
+from pinn import PINN
+from network import Network
+from optimizer import L_BFGS_B
 from numpy import linalg as LA
-
+from matplotlib import cm
+from matplotlib.ticker import LinearLocator
+    
 def u0(tx):
     """
     Initial form.
@@ -30,7 +32,7 @@ if __name__ == '__main__':
     """
 
     # number of training samples
-    num_train_samples = 5000
+    num_train_samples = 10000
     # number of test samples
     num_test_samples = 1000
 
@@ -92,11 +94,8 @@ if __name__ == '__main__':
     cbar.mappable.set_clim(vmin, vmax)
     cbar.ax.tick_params(labelsize=15)
 
-    from matplotlib import cm
-    from matplotlib.ticker import LinearLocator
 
-
-    # ERROR
+    # Exact solution U and Error E
     n = num_test_samples
     U = np.zeros([n,n])
     t = np.linspace(0,t_f,n)
@@ -115,19 +114,17 @@ if __name__ == '__main__':
     plt.pcolormesh(t, x, E, cmap='rainbow', norm=Normalize(vmin=vmin, vmax=vmax))
     font1 = {'family':'serif','size':20}
     font2 = {'family':'serif','size':15}
-
     plt.title("Error", fontdict = font1)
     plt.xlabel("t", fontdict = font1)
     plt.ylabel("x", fontdict = font1)
     plt.tick_params(axis='both', which='major', labelsize=15)
-
     cbar = plt.colorbar(pad=0.05, aspect=10)
     cbar.set_label('Error', fontdict = font1)
     cbar.mappable.set_clim(vmin, vmax)
     cbar.ax.tick_params(labelsize=15)
     plt.show()
 
-    # Comparison
+    # Comparison at time 0, 0.1 and 0.2
 
     fig,(ax1, ax2, ax3)  = plt.subplots(1,3,figsize=(15,6))
     x_flat_ = np.linspace(x_ini, x_f, 10)
@@ -185,5 +182,6 @@ if __name__ == '__main__':
     ax3.set_ylabel('u(t,x)', fontdict = font1)
     ax3.legend(loc='best', fontsize = 'xx-large')
     ax3.tick_params(labelsize=15)
+    
     plt.tight_layout()
     plt.show()
