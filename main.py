@@ -10,6 +10,7 @@ from optimizer import L_BFGS_B
 from numpy import linalg as LA
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator
+import matplotlib.colors as colors
     
 def u0(tx):
     """
@@ -119,8 +120,6 @@ if __name__ == '__main__':
     plt.ylabel("x", fontdict = font1)
     plt.tick_params(axis='both', which='major', labelsize=15)
     cbar = plt.colorbar(pad=0.05, aspect=10)
-    cbar.set_label('Error', fontdict = font1)
-    cbar.mappable.set_clim(vmin, vmax)
     cbar.ax.tick_params(labelsize=15)
     plt.show()
 
