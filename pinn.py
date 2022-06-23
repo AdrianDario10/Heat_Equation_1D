@@ -1,5 +1,5 @@
 import tensorflow as tf
-from .layer import GradientLayer
+from layer import GradientLayer
 
 class PINN:
     """
@@ -14,7 +14,7 @@ class PINN:
         """
         Args:
             network: keras network model with input (t, x) and output u(t, x).
-            c: Default is 1.
+            c: Default is 2.
         """
 
         self.network = network
@@ -23,7 +23,7 @@ class PINN:
 
     def build(self):
         """
-        Build a PINN model for the wave equation.
+        Build a PINN model for the heat equation.
         Returns:
             PINN model for the projectile motion with
                 input: [ (t, x) relative to equation,
@@ -43,11 +43,12 @@ class PINN:
 
         # compute gradients
         _, du_dt, _, d2u_dt2, d2u_dx2 = self.grads(tx_eqn)
-
         # equation output being zero
         u_eqn = du_dt - self.c*self.c * d2u_dx2
+        
         # initial condition output
         u_ini, du_dt_ini, _, _, _ = self.grads(tx_ini)
+        
         # boundary condition output
         u_bnd_down, _, _, _, _ = self.grads(tx_bnd_down)
         u_bnd_up, _, _, _, _ = self.grads(tx_bnd_up)
