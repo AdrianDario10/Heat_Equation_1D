@@ -18,7 +18,7 @@ class GradientLayer(tf.keras.layers.Layer):
 
     def call(self, tx):
         """
-        Computing 1st and 2nd derivatives for the wave equation.
+        Computing 1st and 2nd derivatives for the heat equation.
         Args:
             tx: input variables (t, x).
         Returns:
