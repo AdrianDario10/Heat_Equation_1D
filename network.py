@@ -8,7 +8,7 @@ class Network:
     @classmethod
     def build(cls, num_inputs=2, layers=[32,32,32,32,32,32], activation='tanh', num_outputs=1):
         """
-        Build a PINN model for the wave equation with input shape (t, x) and output shape u(t, x).
+        Build a PINN model for the heat equation with input shape (t, x) and output shape u(t, x).
         Args:
             num_inputs: number of input variables. Default is 2 for (t, x).
             layers: number of hidden layers.
