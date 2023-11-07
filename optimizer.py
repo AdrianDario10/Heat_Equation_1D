@@ -37,7 +37,7 @@ class L_BFGS_B:
         self.m = m
         self.maxls = maxls
         self.maxiter = maxiter
-        self.epsilon = 10e-6
+        self.epsilon = 10e-5
         self.metrics = ['loss']
         # initialize the progress bar
         self.progbar = tf.keras.callbacks.ProgbarLogger(
