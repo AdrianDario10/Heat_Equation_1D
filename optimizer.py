@@ -17,7 +17,7 @@ class L_BFGS_B:
         progbar: progress bar.
     """
 
-    def __init__(self, model, x_train, y_train, factr=1e5, m=50, maxls=50, maxiter=30000):
+    def __init__(self, model, x_train, y_train, factr=1e5, m=50, maxls=50, maxiter=300):
         """
         Args:
             model: optimization target model.
@@ -37,7 +37,7 @@ class L_BFGS_B:
         self.m = m
         self.maxls = maxls
         self.maxiter = maxiter
-        self.epsilon = 10e-5
+        self.epsilon = 10e-2
         self.metrics = ['loss']
         # initialize the progress bar
         self.progbar = tf.keras.callbacks.ProgbarLogger(

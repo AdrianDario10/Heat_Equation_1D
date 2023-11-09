@@ -25,7 +25,7 @@ def u0(tx):
     x = tx[..., 1, None]
 
 
-    return  x**2*(2-x) 
+    return  x**2*(2-x)                        #initial form of u with x and t values 
 
 if __name__ == '__main__':
     """
@@ -44,41 +44,41 @@ if __name__ == '__main__':
     pinn = PINN(network).build()
 
     # Time and space domain
-    t_f=0.2
-    x_f=2
-    x_ini=0
+    t_f=0.2 #t final
+    x_f=2   #x final
+    x_ini=0 #x initial
 
     # create training input
-    tx_eqn = np.random.rand(num_train_samples, 2)
-    tx_eqn[..., 0] = t_f*tx_eqn[..., 0]                
-    tx_eqn[..., 1] = (x_f-x_ini)*tx_eqn[..., 1] + x_ini           
-    tx_ini = np.random.rand(num_train_samples, 2)
-    tx_ini[..., 0] = 0                               
-    tx_ini[..., 1] = (x_f-x_ini)*tx_ini[..., 1] + x_ini           
-    tx_bnd_up = np.random.rand(num_train_samples, 2)
-    tx_bnd_up[..., 0] = t_f*tx_bnd_up[..., 0]               
-    tx_bnd_up[..., 1] = x_f  # x = -1 or +1
-    tx_bnd_down = np.random.rand(num_train_samples, 2)
-    tx_bnd_down[..., 0] = t_f*tx_bnd_down[..., 0]              
-    tx_bnd_down[..., 1] = x_ini  
+    tx_eqn = np.random.rand(num_train_samples, 2)         #two columns for t,x equation
+    tx_eqn[..., 0] = t_f*tx_eqn[..., 0]                   #changing rando values into the range of t domain     
+    tx_eqn[..., 1] = (x_f-x_ini)*tx_eqn[..., 1] + x_ini   #change rando values into x domain + x_ini      
+    tx_ini = np.random.rand(num_train_samples, 2)         #two columns for t,x for inital conditions
+    tx_ini[..., 0] = 0                                    #t in initial is 0
+    tx_ini[..., 1] = (x_f-x_ini)*tx_ini[..., 1] + x_ini   #x in initial is domain of x + x_ini    
+    tx_bnd_up = np.random.rand(num_train_samples, 2)      #two columns for boundy condtion for upper bound
+    tx_bnd_up[..., 0] = t_f*tx_bnd_up[..., 0]             #changein rand values into the domin of t
+    tx_bnd_up[..., 1] = x_f  # x = -1 or +1               #x in boundery condtion Up =x final 
+    tx_bnd_down = np.random.rand(num_train_samples, 2)    #two columns for boundy condtion for upper bound
+    tx_bnd_down[..., 0] = t_f*tx_bnd_down[..., 0]         #changein rand values into the domin of t     
+    tx_bnd_down[..., 1] = x_ini                           #x in boundery condtion Up =x initial 
 
     # create training output
-    u_zero = np.zeros((num_train_samples, 1))
-    u_ini = u0(tf.constant(tx_ini)).numpy()
+    u_zero = np.zeros((num_train_samples, 1))             #cause we have one column for output 
+    u_ini = u0(tf.constant(tx_ini)).numpy()               #puting x inintial values that t=0 and x in the x domin into the initial condition
 
     # train the model using L-BFGS-B algorithm
-    x_train = [tx_eqn, tx_ini, tx_bnd_up,tx_bnd_down]
-    y_train = [u_zero, u_ini, u_zero, u_zero]
-    lbfgs = L_BFGS_B(model=pinn, x_train=x_train, y_train=y_train)
-    lbfgs.fit()
+    x_train = [tx_eqn, tx_ini, tx_bnd_up,tx_bnd_down]     #first we gave the equation and then initial and then bound up and down
+    y_train = [u_zero, u_ini, u_zero, u_zero]             #first we gave the equation and then initial and then zero for bound up and down
+    lbfgs = L_BFGS_B(model=pinn, x_train=x_train, y_train=y_train)    #optimization with lbfgs
+    lbfgs.fit()                                           #fiting the optimized model 
 
     # predict u(t,x) distribution
-    t_flat = np.linspace(0, t_f, num_test_samples)
-    x_flat = np.linspace(x_ini, x_f, num_test_samples)
-    t, x = np.meshgrid(t_flat, x_flat)
-    tx = np.stack([t.flatten(), x.flatten()], axis=-1)
-    u = network.predict(tx, batch_size=num_test_samples)
-    u = u.reshape(t.shape)
+    t_flat = np.linspace(0, t_f, num_test_samples)        #making some specefic with constant distances through t values
+    x_flat = np.linspace(x_ini, x_f, num_test_samples)    #making some specefic with constant distances through x values
+    t, x = np.meshgrid(t_flat, x_flat)                    #mesh griding
+    tx = np.stack([t.flatten(), x.flatten()], axis=-1)    # making a tx array from the combination of t and x values flatten
+    u = network.predict(tx, batch_size=num_test_samples)  #prediction with considering that the bach size the how much data we give to model
+    u = u.reshape(t.shape)                                #for ploting use and without data loss
     
 
     # plot u(t,x) distribution as a color-map
@@ -106,7 +106,7 @@ if __name__ == '__main__':
     for i in range(1,1000):
       C = -32/(i**3*np.pi**3)*(2*(-1)**i+1)
       for j in range(n):
-        U[j,...] = U[j,...] + C*np.sin(i*np.pi*x[j]/2)*np.exp(-i**2*np.pi**2*t)
+       U[j,...] = U[j,...] + C*np.sin(i*np.pi*x[j]/2)*np.exp(-i**2*np.pi**2*t)
     
     E = (U-u)
     
